@@ -38,8 +38,6 @@ public class Main {
                 case "4":
                     Database.UserLogin(connection,scanner);
                     break;
-                case "5":
-                    break;
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

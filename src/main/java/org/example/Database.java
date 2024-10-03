@@ -57,42 +57,24 @@ public class Database {
             return null;
         }
     }
-    public static void OrderProduct(Connection connection, Scanner scanner){
-            if (email.isEmpty()){
-                System.out.println("you must be logged in in to order products");
-            }
-        try {
-            System.out.println("Welcome to the delivery Service. here you can order the items below by typing their number and pressing enter");
-            System.out.println("1: Coca Cola");
-            System.out.println("2: Skim milk");
-            System.out.println("3: Cheese");
-
-            Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("UPDATE CostumerCart SET birthday = '2001-01-04' WHERE id IN (SELECT id FROM Employees WHERE name = 'Pelle Svensson')");
-            while(result.next()){
-                System.out.println("Welcome "+LogU);
-                email = result.getString("Email");
-                HubWorld(connection,scanner);
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
   public static void UserLogin(Connection connection, Scanner scanner){
-        if (scanner.nextLine() == "2"){
-            UserMaking(connection,scanner);
-        } else
+      System.out.println("welcome to login please press enter");
         try {
             System.out.println("Please enter username");
-            LogU = scanner.nextLine();
+            username = scanner.nextLine();
             System.out.println("Please enter password");
-            LogP = scanner.nextLine();
+           password = scanner.nextLine();
             Statement statement = connection.createStatement();
-            ResultSet result = statement.executeQuery("Select username,Password,Email from UserData WHERE username ='"+ LogU + "'AND Password = '" +LogP+"'");
+            ResultSet result = statement.executeQuery("Select username,Password,Email from UserData WHERE username ='"+ username + "'AND Password = '" +password+"'");
             while(result.next()){
-                System.out.println("Welcome "+LogU);
+                System.out.println("Welcome "+password);
               email = result.getString("Email");
             HubWorld(connection,scanner);
+            }
+            if (!result.next()) {
+                System.out.println("wrong password or username.");
+                HubWorld(connection, scanner);
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -102,8 +84,8 @@ public class Database {
     }
     static void UserReading(Connection connection, Scanner scanner){
         if (email.isEmpty()){
-            System.out.println("sorry but to read users you must be logged in. if your not registerd type 2 else just press enter");
-            Database.UserLogin(connection, scanner);
+            System.out.println("sorry but to read users you must be logged in. Please Log in or Register");
+            Main.HubWorld(connection, scanner);
         }else
         System.out.println("SHOWING USERS:");
         try {String hashedPassword = hashPassword(password);
@@ -125,7 +107,7 @@ public class Database {
 
 
         } catch (SQLException ex) {
-            System.out.println("the username and password");
+            System.out.println("email taken");
             Database.PrintSQLException(ex);
         }
         HubWorld(connection, scanner);
@@ -138,8 +120,9 @@ public class Database {
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
             preparedStatement.setString(1, email);
         } catch (SQLException ex) {
-            System.out.println("the username and password");
+            System.out.println("Wrong email try again");
             Database.PrintSQLException(ex);
+            HubWorld(connection, scanner);
         }
     }
     static void UserMaking(Connection connection, Scanner scanner){
@@ -168,7 +151,7 @@ public class Database {
                 HubWorld(connection,scanner);
 
         } catch (SQLException ex) {
-            System.out.println("the username and password");
+            System.out.println("Email taken");
             Database.PrintSQLException(ex);
         }
 
