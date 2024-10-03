@@ -61,6 +61,22 @@ public class Database {
             if (email.isEmpty()){
                 System.out.println("you must be logged in in to order products");
             }
+        try {
+            System.out.println("Welcome to the delivery Service. here you can order the items below by typing their number and pressing enter");
+            System.out.println("1: Coca Cola");
+            System.out.println("2: Skim milk");
+            System.out.println("3: Cheese");
+
+            Statement statement = connection.createStatement();
+            ResultSet result = statement.executeQuery("UPDATE CostumerCart SET birthday = '2001-01-04' WHERE id IN (SELECT id FROM Employees WHERE name = 'Pelle Svensson')");
+            while(result.next()){
+                System.out.println("Welcome "+LogU);
+                email = result.getString("Email");
+                HubWorld(connection,scanner);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
   public static void UserLogin(Connection connection, Scanner scanner){
         if (scanner.nextLine() == "2"){
@@ -135,15 +151,22 @@ public class Database {
         Address = scanner.nextLine();
         System.out.println("Zip Code");
         ZipCode = scanner.nextLine();
+        System.out.println("Password");
+        password = scanner.nextLine();
         try {
             Statement statement = connection.createStatement();
-            String insertSQL = "INSERT INTO UserData (username,Email,Address,ZipCode) VALUES (?, ?, ?, ?)";
+            String insertSQL = "INSERT INTO UserData (username,Email,Address,ZipCode,Password) VALUES (?, ?, ?, ?,?)";
             PreparedStatement preparedStatement = connection.prepareStatement(insertSQL);
             preparedStatement.setString(1, username);
             preparedStatement.setString(2, email);
             preparedStatement.setString(3, Address);
             preparedStatement.setString(4, ZipCode);
+            preparedStatement.setString(5, password);
             preparedStatement.executeUpdate();
+
+                System.out.println("Welcome "+username);
+                HubWorld(connection,scanner);
+
         } catch (SQLException ex) {
             System.out.println("the username and password");
             Database.PrintSQLException(ex);
